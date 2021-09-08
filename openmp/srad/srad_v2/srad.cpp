@@ -12,6 +12,10 @@
 #include <math.h>
 #include <omp.h>
 
+#ifdef ENABLE_RODINIA_HOOKS
+#include <zsim_hooks.h>
+#endif
+
 void random_matrix(float *I, int rows, int cols);
 
 void usage(int argc, char **argv)
@@ -107,6 +111,10 @@ int main(int argc, char* argv[])
    
 	printf("Start the SRAD main loop\n");
 
+#ifdef ENABLE_RODINIA_HOOKS
+    zsim_roi_begin();
+#endif
+
 #ifdef ITERATION
 	for (iter=0; iter< niter; iter++){
 #endif        
@@ -191,6 +199,10 @@ int main(int argc, char* argv[])
 
 #ifdef ITERATION
 	}
+#endif
+
+#ifdef ENABLE_RODINIA_HOOKS
+    zsim_roi_end();
 #endif
 
 

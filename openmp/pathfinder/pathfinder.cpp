@@ -5,6 +5,10 @@
 
 #include "timer.h"
 
+#ifdef ENABLE_RODINIA_HOOKS
+#include <zsim_hooks.h>
+#endif
+
 void run(int argc, char** argv);
 
 /* define timer macros */
@@ -91,6 +95,11 @@ void run(int argc, char** argv)
     src = new int[cols];
 
     pin_stats_reset();
+
+#ifdef ENABLE_RODINIA_HOOKS
+    zsim_roi_begin();
+#endif
+
     for (int t = 0; t < rows-1; t++) {
         temp = src;
         src = dst;
@@ -106,16 +115,27 @@ void run(int argc, char** argv)
         }
     }
 
+#ifdef ENABLE_RODINIA_HOOKS
+    zsim_roi_end();
+#endif
+
     pin_stats_pause(cycles);
     pin_stats_dump(cycles);
 
-#ifdef BENCH_PRINT
-    for (int i = 0; i < cols; i++)
-            printf("%d ",data[i]) ;
-    printf("\n") ;
-    for (int i = 0; i < cols; i++)
-            printf("%d ",dst[i]) ;
-    printf("\n") ;
+#ifdef BENCH_PRINT
+
+    for (int i = 0; i < cols; i++)
+
+            printf("%d ",data[i]) ;
+
+    printf("\n") ;
+
+    for (int i = 0; i < cols; i++)
+
+            printf("%d ",dst[i]) ;
+
+    printf("\n") ;
+
 #endif
 
     delete [] data;

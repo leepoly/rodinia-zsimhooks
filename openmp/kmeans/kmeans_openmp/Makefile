@@ -1,6 +1,6 @@
 # C compiler
 CC = gcc
-CC_FLAGS = -g -fopenmp -O2 
+CC_FLAGS = -g -fopenmp -O2 -I../../../common
 
 kmeans: cluster.o getopt.o kmeans.o kmeans_clustering.o 
 	$(CC) $(CC_FLAGS) cluster.o getopt.o kmeans.o kmeans_clustering.o  -o kmeans
@@ -15,7 +15,7 @@ getopt.o: getopt.c
 	$(CC) $(CC_FLAGS) getopt.c -c
 	
 kmeans.o: kmeans.c 
-	$(CC) $(CC_FLAGS) kmeans.c -c
+	$(CC) $(CC_FLAGS) -DENABLE_RODINIA_HOOKS kmeans.c -c
 
 kmeans_clustering.o: kmeans_clustering.c kmeans.h
 	$(CC) $(CC_FLAGS) kmeans_clustering.c -c

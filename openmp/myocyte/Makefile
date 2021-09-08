@@ -25,7 +25,9 @@ main.o: 	main.c \
 				file.c \
 				timer.c
 	gcc	main.c \
-			-c -O3 -fopenmp
+			-c -O3 -fopenmp \
+			-DENABLE_RODINIA_HOOKS \
+			-I../../common
 
 # delete all object files
 clean:

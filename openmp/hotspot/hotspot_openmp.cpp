@@ -31,6 +31,10 @@ using namespace std;
 #define OPEN
 //#define NUM_THREAD 4
 
+#ifdef ENABLE_RODINIA_HOOKS
+#include <zsim_hooks.h>
+#endif
+
 typedef float FLOAT;
 
 /* chip parameters	*/
@@ -307,7 +311,15 @@ int main(int argc, char **argv)
 	
     long long start_time = get_time();
 
+#ifdef ENABLE_RODINIA_HOOKS
+    zsim_roi_begin();
+#endif
+
     compute_tran_temp(result,sim_time, temp, power, grid_rows, grid_cols);
+
+#ifdef ENABLE_RODINIA_HOOKS
+    zsim_roi_end();
+#endif
 
     long long end_time = get_time();
 

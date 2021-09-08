@@ -46,7 +46,9 @@ main.o:		main.h \
 						-c \
 						-o ./kernel/kernel_cpu.o \
 						-O3 \
-						$(OMP_FLAG)
+						$(OMP_FLAG) \
+						-I../../common \
+						-DENABLE_RODINIA_HOOKS
 
 ./util/num/num.o:	./util/num/num.h \
 					./util/num/num.c

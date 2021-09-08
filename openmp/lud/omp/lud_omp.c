@@ -12,6 +12,10 @@ extern int omp_num_threads;
 #pragma offload_attribute(push, target(mic))
 #endif
 
+#ifdef ENABLE_RODINIA_HOOKS
+#include <zsim_hooks.h>
+#endif
+
 void lud_diagonal_omp (float* a, int size, int offset)
 {
     int i, j, k;
@@ -55,6 +59,11 @@ void lud_omp(float *a, int size)
     printf("running OMP on host\n");
     omp_set_num_threads(omp_num_threads);
 #endif
+
+#ifdef ENABLE_RODINIA_HOOKS
+    zsim_roi_begin();
+#endif
+
     for (offset = 0; offset < size - BS ; offset += BS)
     {
         // lu factorization of left-top corner block diagonal matrix 
@@ -158,6 +167,11 @@ void lud_omp(float *a, int size)
     }
 
     lud_diagonal_omp(a, size, offset);
+
+#ifdef ENABLE_RODINIA_HOOKS
+    zsim_roi_end();
+#endif
+
 #ifdef OMP_OFFLOAD
 }
 #endif

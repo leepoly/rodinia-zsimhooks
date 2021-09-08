@@ -5,7 +5,9 @@
 #include <omp.h>
 //#define NUM_THREAD 4
 #define OPEN
-
+#ifdef ENABLE_RODINIA_HOOKS
+#include <zsim_hooks.h>
+#endif
 
 FILE *fp;
 
@@ -111,6 +113,10 @@ void BFSGraph( int argc, char** argv)
 		h_cost[i]=-1;
 	h_cost[source]=0;
 	
+#ifdef ENABLE_RODINIA_HOOKS
+    zsim_roi_begin();
+#endif
+
 	printf("Start traversing the tree\n");
 	
 	int k=0;
@@ -175,6 +181,11 @@ void BFSGraph( int argc, char** argv)
         }
 #endif
 #endif
+
+#ifdef ENABLE_RODINIA_HOOKS
+    zsim_roi_end();
+#endif
+
 	//Store the result into a file
 	FILE *fpo = fopen("result.txt","w");
 	for(int i=0;i<no_of_nodes;i++)

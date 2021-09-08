@@ -80,6 +80,10 @@
 
 #include "kmeans.h"
 
+#ifdef ENABLE_RODINIA_HOOKS
+#include <zsim_hooks.h>
+#endif
+
 extern double wtime(void);
 
 int num_omp_threads = 1;
@@ -205,6 +209,11 @@ int main(int argc, char **argv) {
 	memcpy(attributes[0], buf, numObjects*numAttributes*sizeof(float));
 
 	timing = omp_get_wtime();
+
+#ifdef ENABLE_RODINIA_HOOKS
+    zsim_roi_begin();
+#endif
+
     for (i=0; i<nloops; i++) {
         
         cluster_centres = NULL;
@@ -217,6 +226,11 @@ int main(int argc, char **argv) {
                );
      
     }
+
+#ifdef ENABLE_RODINIA_HOOKS
+    zsim_roi_end();
+#endif
+
     timing = omp_get_wtime() - timing;
 	
 

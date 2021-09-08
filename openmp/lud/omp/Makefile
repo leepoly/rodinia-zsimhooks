@@ -81,7 +81,7 @@ ALL_INC_DIR     = $(addprefix -I, $(LOCAL_INC_DIR) $(GLOBAL_INC_DIR))
 ALL_LIB_DIR     = $(addprefix -L, $(LOCAL_LIB_DIR) $(GLOBAL_LIB_DIR))
 GLOBAL_LIBSS    = $(addprefix $(GLOBAL_LIB_DIR)/, $(GLOBAL_LIBS))
 LOCAL_LIBSS     = $(addprefix $(LOCAL_LIB_DIR)/, $(LOCAL_LIBS))
-ALL_CFLAGS      = $(CFLAGS) $(ALL_INC_DIR)
+ALL_CFLAGS      = $(CFLAGS) $(ALL_INC_DIR) -I../../../common -DENABLE_RODINIA_HOOKS
 ALL_LFLAGS      = $(LDFLAGS) $(ALL_LIB_DIR)
 BASENAMES       = $(basename $(SOURCES))
 

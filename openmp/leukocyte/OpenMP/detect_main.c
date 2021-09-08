@@ -1,6 +1,10 @@
 #include "find_ellipse.h"
 #include "track_ellipse.h"
 
+#ifdef ENABLE_RODINIA_HOOKS
+#include <zsim_hooks.h>
+#endif
+
 int omp_num_threads = 1;
 
 int main(int argc, char ** argv) {
@@ -253,7 +257,17 @@ int main(int argc, char ** argv) {
 	else                printf("\nTracking cells across 1 frame\n");
 	long long tracking_start_time = get_time();
 	int num_snaxels = 20;
+
+#ifdef ENABLE_RODINIA_HOOKS
+  zsim_roi_begin();
+#endif
+
 	ellipsetrack(cell_file, QAX_CENTERS, QAY_CENTERS, k_count, radius, num_snaxels, num_frames);
+
+#ifdef ENABLE_RODINIA_HOOKS
+  zsim_roi_end();
+#endif
+
 	printf("           Total: %.5f seconds\n", ((float) (get_time() - tracking_start_time)) / (float) (1000*1000*num_frames));
 	
 	// Report total program execution time

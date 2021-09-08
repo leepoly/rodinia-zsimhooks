@@ -1,6 +1,6 @@
 # C compiler
 CC = gcc
-CC_FLAGS = -g -fopenmp  -O2
+CC_FLAGS = -g -fopenmp -O2 -I../../common
 
 
 backprop: backprop.o facetrain.o imagenet.o backprop_kernel.o 
@@ -10,7 +10,7 @@ backprop: backprop.o facetrain.o imagenet.o backprop_kernel.o
 	$(CC) $(CC_FLAGS) $< -c
 
 facetrain.o: facetrain.c backprop.h
-	$(CC) $(CC_FLAGS) facetrain.c -c
+	$(CC) $(CC_FLAGS) -DENABLE_RODINIA_HOOKS facetrain.c -c
 	
 backprop.o: backprop.c backprop.h
 	$(CC) $(CC_FLAGS) backprop.c -c

@@ -1,7 +1,7 @@
 CC = g++
 SRC = pathfinder.cpp
 EXE = pathfinder
-FLAGS = -fopenmp
+FLAGS = -fopenmp -I../../common -DENABLE_RODINIA_HOOKS
 
 release:
 	$(CC) $(SRC) $(FLAGS) -o $(EXE)

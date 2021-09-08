@@ -15,8 +15,8 @@ EXECUTABLE      := lud_omp_offload
 SOURCES         := lud.c lud_omp.c ../common/common.c 
 
 # ------------  compiler  ------------------------------------------------------
-CC              := icc
-CXX             := icc
+CC              := gcc
+CXX             := gcc
 
 # ------------  compiler flags  ------------------------------------------------  -qopt-gather-scatter-unroll=7
 DEBUG_CFLAGS    := -Wall -O0 -g

@@ -4,6 +4,10 @@
 #include "backprop.h"
 #include "omp.h"
 
+#ifdef ENABLE_RODINIA_HOOKS
+#include <zsim_hooks.h>
+#endif
+
 extern char *strcpy();
 extern void exit();
 
@@ -19,7 +23,13 @@ backprop_face()
   load(net);
   //entering the training kernel, only one iteration
   printf("Starting training kernel\n");
+#ifdef ENABLE_RODINIA_HOOKS
+  zsim_roi_begin();
+#endif
   bpnn_train_kernel(net, &out_err, &hid_err);
+#ifdef ENABLE_RODINIA_HOOKS
+  zsim_roi_end();
+#endif
   bpnn_free(net);
   printf("Training done\n");
 }
