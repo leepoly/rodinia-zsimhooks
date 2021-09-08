@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <assert.h>
+#include <omp.h>
 
 #include "timer.h"
 
@@ -16,8 +17,6 @@ void run(int argc, char** argv);
 #define pin_stats_pause(cycles)   stopCycle(cycles)
 #define pin_stats_dump(cycles)    printf("timer: %Lu\n", cycles)
 
-#define BENCH_PRINT
-
 int rows, cols;
 int* data;
 int** wall;
@@ -27,11 +26,13 @@ int* result;
 void
 init(int argc, char** argv)
 {
-	if(argc==3){
+    int omp_num_threads = 8;
+	if(argc==4){
 		cols = atoi(argv[1]);
 		rows = atoi(argv[2]);
+        omp_num_threads = atoi(argv[3]);
 	}else{
-                printf("Usage: pathfiner width num_of_steps\n");
+                printf("Usage: pathfiner width num_of_steps nThread\n");
                 exit(0);
         }
 	data = new int[rows*cols];
@@ -62,6 +63,9 @@ init(int argc, char** argv)
         printf("\n") ;
     }
 #endif
+
+    printf("running OMP on host. Thread %d\n", omp_num_threads);
+    omp_set_num_threads(omp_num_threads);
 }
 
 void 

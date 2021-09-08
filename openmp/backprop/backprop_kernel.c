@@ -5,6 +5,7 @@
 #include <sys/time.h>
 
 #include "backprop.h"
+int NUM_THREAD = 8;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -35,6 +36,21 @@ double gettime() {
 int
 main( int argc, char** argv) 
 {
+    if (argc <= 2) {
+        printf("Usage backprop nThread scale\n");
+        return -1;
+    }
+    NUM_THREAD = atoi(argv[1]);
+    printf("OMP_NUM_THREADS=%d\n", NUM_THREAD);
+    argc -= 1;
+    argv = argv+1;
+    // Another way: use getenv()
+    // const char* s = getenv("OMP_NUM_THREAD");
+    // if (s) {
+    //     printf("OMP_NUM_THREADS=%s\n", s);
+    //     NUM_THREAD = atoi(s);
+    // }
+
 	setup(argc, argv);
 }
 

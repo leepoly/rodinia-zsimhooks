@@ -56,7 +56,7 @@ void lud_omp(float *a, int size)
 {
     omp_set_num_threads(224);
 #else
-    printf("running OMP on host\n");
+    printf("running OMP on host. Thread %d\n", omp_num_threads);
     omp_set_num_threads(omp_num_threads);
 #endif
 
