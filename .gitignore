@@ -6,6 +6,7 @@ data/*
 *.swp
 *.gch
 *.out
+.vscode
 
 openmp/backprop/backprop
 openmp/bfs/result.txt

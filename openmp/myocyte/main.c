@@ -260,7 +260,7 @@ int main(int argc, char *argv []){
 
 	// y
 	for(i=0; i<workload; i++){
-		read(	"../../data/myocyte/y.txt",
+		read(	"y.txt",
 					y[i][0],
 					91,
 					1,
@@ -269,7 +269,7 @@ int main(int argc, char *argv []){
 
 	// params
 	for(i=0; i<workload; i++){
-		read(	"../../data/myocyte/params.txt",
+		read(	"params.txt",
 					params[i],
 					16,
 					1,
