@@ -264,8 +264,11 @@ runTest( int argc, char** argv)
     max_rows = max_rows + 1;
     max_cols = max_cols + 1;
     referrence = (int *)malloc( max_rows * max_cols * sizeof(int) );
+    zsim_configure_stream_affine(referrence, sizeof(int), 0, 0, sizeof(int) * max_rows * max_cols);
     input_itemsets = (int *)malloc( max_rows * max_cols * sizeof(int) );
+    zsim_configure_stream_affine(input_itemsets, sizeof(int), 0, 0, sizeof(int) * max_rows * max_cols);
     output_itemsets = (int *)malloc( max_rows * max_cols * sizeof(int) );
+    zsim_configure_stream_affine(output_itemsets, sizeof(int), 0, 0, sizeof(int) * max_rows * max_cols); // Stream Note (Yiwei): output_itemset is duplicated. A smart stream system should avoid allocate space for it.
 
 
     if (!input_itemsets)

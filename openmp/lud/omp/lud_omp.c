@@ -30,7 +30,7 @@ void lud_diagonal_omp (float* a, int size, int offset)
         float temp = 1.f/AA(i,i);
         for (j = i+1; j < BS; j++) {
             for (k = 0; k < i ; k++) {
-                AA(j,i) = AA(j,i) - AA(j,k) * AA(k,i);
+                AA(j,i) = AA(j,i) - AA(j,k) * AA(k,i); // stream notes (yiwei): we ignore column-major affine access
             }
             AA(j,i) = AA(j,i)*temp;
         }
@@ -82,6 +82,7 @@ void lud_omp(float *a, int size)
             int i, j, k, i_global, j_global, i_here, j_here;
             float sum;           
             float temp[BS*BS] __attribute__ ((aligned (64)));
+            // zsim_configure_stream_affine(temp, sizeof(float), 0, 0, sizeof(temp));
 
             for (i = 0; i < BS; i++) {
                 #pragma omp simd
@@ -137,6 +138,9 @@ void lud_omp(float *a, int size)
             float temp_top[BS*BS] __attribute__ ((aligned (64)));
             float temp_left[BS*BS] __attribute__ ((aligned (64)));
             float sum[BS] __attribute__ ((aligned (64))) = {0.f};
+            // zsim_configure_stream_affine(temp_top, sizeof(float), 0, 0, sizeof(temp_top));
+            // zsim_configure_stream_affine(temp_left, sizeof(float), 0, 0, sizeof(temp_left));
+            // zsim_configure_stream_affine(sum, sizeof(float), 0, 0, sizeof(sum));
             
             i_global = offset + BS * (1 +  chunk_idx/chunks_in_inter_row);
             j_global = offset + BS * (1 + chunk_idx%chunks_in_inter_row);

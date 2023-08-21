@@ -244,11 +244,15 @@ int main(int argc, char** argv)
     int size = numCols * numRows * layers;
 
     powerIn = (float*)calloc(size, sizeof(float));
+    zsim_configure_stream_affine(powerIn, sizeof(float), 0, 0, sizeof(float) * size);
     tempCopy = (float*)malloc(size * sizeof(float));
     tempIn = (float*)calloc(size,sizeof(float));
+    zsim_configure_stream_affine(tempIn, sizeof(float), 0, 0, sizeof(float) * size);
     tempOut = (float*)calloc(size, sizeof(float));
+    zsim_configure_stream_affine(tempOut, sizeof(float), 0, 0, sizeof(float) * size);
     //pCopy = (float*)calloc(size,sizeof(float));
     float* answer = (float*)calloc(size, sizeof(float));
+    zsim_configure_stream_affine(answer, sizeof(float), 0, 0, sizeof(float) * size);
 
     // outCopy = (float*)calloc(size, sizeof(float));
     readinput(powerIn,numRows, numCols, layers,pfile);

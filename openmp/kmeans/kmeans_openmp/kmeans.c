@@ -189,8 +189,11 @@ int main(int argc, char **argv) {
 
         /* allocate space for attributes[] and read attributes of all objects */
         buf           = (float*) malloc(numObjects*numAttributes*sizeof(float));
+        zsim_configure_stream_affine(buf, sizeof(float), 0, 0, numObjects*numAttributes*sizeof(float));
         attributes    = (float**)malloc(numObjects*             sizeof(float*));
+        zsim_configure_stream_affine(attributes, sizeof(float*), 0, 0, numObjects*sizeof(float*));
         attributes[0] = (float*) malloc(numObjects*numAttributes*sizeof(float));
+        zsim_configure_stream_affine(attributes[0], sizeof(float), 0, 0, numObjects*numAttributes*sizeof(float));
         for (i=1; i<numObjects; i++)
             attributes[i] = attributes[i-1] + numAttributes;
         rewind(infile);

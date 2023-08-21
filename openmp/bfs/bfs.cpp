@@ -68,9 +68,15 @@ void BFSGraph( int argc, char** argv)
    
 	// allocate host memory
 	Node* h_graph_nodes = (Node*) malloc(sizeof(Node)*no_of_nodes);
+    zsim_configure_stream_affine(h_graph_nodes, sizeof(Node), 0, 0, sizeof(Node) * no_of_nodes);
 	bool *h_graph_mask = (bool*) malloc(sizeof(bool)*no_of_nodes);
+    zsim_configure_stream_affine(h_graph_mask, sizeof(bool), 0, 0, sizeof(bool) * no_of_nodes);
 	bool *h_updating_graph_mask = (bool*) malloc(sizeof(bool)*no_of_nodes);
+    zsim_configure_stream_affine(h_updating_graph_mask, sizeof(bool), 0, 0, sizeof(bool) * no_of_nodes);
+	// zsim_configure_stream_indirect(h_updating_graph_mask, /* elemsize */ sizeof(bool), /* size */ sizeof(bool)*no_of_nodes, /* assoc_sid */ NULL);
 	bool *h_graph_visited = (bool*) malloc(sizeof(bool)*no_of_nodes);
+    zsim_configure_stream_affine(h_graph_visited, sizeof(bool), 0, 0, sizeof(bool) * no_of_nodes);
+	// zsim_configure_stream_indirect(h_graph_visited, /* elemsize */ sizeof(bool), /* size */ sizeof(bool)*no_of_nodes, /* assoc_sid */ NULL);
 
 	int start, edgeno;   
 	// initalize the memory
@@ -96,6 +102,7 @@ void BFSGraph( int argc, char** argv)
 
 	int id,cost;
 	int* h_graph_edges = (int*) malloc(sizeof(int)*edge_list_size);
+    zsim_configure_stream_affine(h_graph_edges, sizeof(int), 0, 0, sizeof(int) * edge_list_size);
 	for(int i=0; i < edge_list_size ; i++)
 	{
 		fscanf(fp,"%d",&id);
@@ -109,6 +116,8 @@ void BFSGraph( int argc, char** argv)
 
 	// allocate mem for the result on host side
 	int* h_cost = (int*) malloc( sizeof(int)*no_of_nodes);
+    zsim_configure_stream_affine(h_cost, sizeof(int), 0, 0, sizeof(int) * no_of_nodes);
+	// zsim_configure_stream_indirect(h_cost, /* elemsize */ sizeof(int), /* size */ sizeof(int)*no_of_nodes, /* assoc_sid */ NULL);
 	for(int i=0;i<no_of_nodes;i++)
 		h_cost[i]=-1;
 	h_cost[source]=0;

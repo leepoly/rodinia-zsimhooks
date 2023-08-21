@@ -73,19 +73,30 @@ int main(int argc, char* argv[])
     size_R = (r2-r1+1)*(c2-c1+1);   
 
 	I = (float *)malloc( size_I * sizeof(float) );
+    zsim_configure_stream_affine(I, sizeof(float), 0, 0, sizeof(float) * size_I);
     J = (float *)malloc( size_I * sizeof(float) );
+    zsim_configure_stream_affine(J, sizeof(float), 0, 0, sizeof(float) * size_I);
 	c  = (float *)malloc(sizeof(float)* size_I) ;
+    zsim_configure_stream_affine(c, sizeof(float), 0, 0, sizeof(float) * size_I);
 
     iN = (int *)malloc(sizeof(unsigned int*) * rows) ;
+    zsim_configure_stream_affine(iN, sizeof(unsigned int*), 0, 0, sizeof(unsigned int*) * rows);
     iS = (int *)malloc(sizeof(unsigned int*) * rows) ;
+    zsim_configure_stream_affine(iS, sizeof(unsigned int*), 0, 0, sizeof(unsigned int*) * rows);
     jW = (int *)malloc(sizeof(unsigned int*) * cols) ;
+    zsim_configure_stream_affine(jW, sizeof(unsigned int*), 0, 0, sizeof(unsigned int*) * cols);
     jE = (int *)malloc(sizeof(unsigned int*) * cols) ;    
+    zsim_configure_stream_affine(jE, sizeof(unsigned int*), 0, 0, sizeof(unsigned int*) * cols);
 
 
 	dN = (float *)malloc(sizeof(float)* size_I) ;
+    zsim_configure_stream_affine(dN, sizeof(float), 0, 0, sizeof(float) * size_I);
     dS = (float *)malloc(sizeof(float)* size_I) ;
+    zsim_configure_stream_affine(dS, sizeof(float), 0, 0, sizeof(float) * size_I);
     dW = (float *)malloc(sizeof(float)* size_I) ;
+    zsim_configure_stream_affine(dW, sizeof(float), 0, 0, sizeof(float) * size_I);
     dE = (float *)malloc(sizeof(float)* size_I) ;    
+    zsim_configure_stream_affine(dE, sizeof(float), 0, 0, sizeof(float) * size_I);
     
 
     for (int i=0; i< rows; i++) {

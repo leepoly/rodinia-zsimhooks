@@ -248,6 +248,7 @@ void videoSequence(int * I, int IszX, int IszY, int Nfr, int * seed){
 	
 	/*dilate matrix*/
 	int * newMatrix = (int *)malloc(sizeof(int)*IszX*IszY*Nfr);
+    zsim_configure_stream_affine(newMatrix, sizeof(int), 0, 0, sizeof(int)*IszX*IszY*Nfr);
 	imdilate_disk(I, IszX, IszY, Nfr, 5, newMatrix);
 	int x, y;
 	for(x = 0; x < IszX; x++){
@@ -357,6 +358,7 @@ void particleFilter(int * I, int IszX, int IszY, int Nfr, int * seed, int Nparti
 	int radius = 5;
 	int diameter = radius*2 - 1;
 	int * disk = (int *)malloc(diameter*diameter*sizeof(int));
+    zsim_configure_stream_affine(disk, sizeof(int), 0, 0, sizeof(int)*diameter*diameter);
 	strelDisk(disk, radius);
 	int countOnes = 0;
 	int x, y;
@@ -367,12 +369,14 @@ void particleFilter(int * I, int IszX, int IszY, int Nfr, int * seed, int Nparti
 		}
 	}
 	double * objxy = (double *)malloc(countOnes*2*sizeof(double));
+    zsim_configure_stream_affine(objxy, sizeof(int), 0, 0, sizeof(int)*countOnes*2);
 	getneighbors(disk, countOnes, objxy, radius);
 	
 	long long get_neighbors = get_time();
 	printf("TIME TO GET NEIGHBORS TOOK: %f\n", elapsed_time(start, get_neighbors));
 	//initial weights are all equal (1/Nparticles)
 	double * weights = (double *)malloc(sizeof(double)*Nparticles);
+    zsim_configure_stream_affine(weights, sizeof(int), 0, 0, sizeof(int)*Nparticles);
 	#pragma omp parallel for shared(weights, Nparticles) private(x)
 	for(x = 0; x < Nparticles; x++){
 		weights[x] = 1/((double)(Nparticles));
@@ -381,13 +385,22 @@ void particleFilter(int * I, int IszX, int IszY, int Nfr, int * seed, int Nparti
 	printf("TIME TO GET WEIGHTSTOOK: %f\n", elapsed_time(get_neighbors, get_weights));
 	//initial likelihood to 0.0
 	double * likelihood = (double *)malloc(sizeof(double)*Nparticles);
+    zsim_configure_stream_affine(likelihood, sizeof(double), 0, 0, sizeof(double)*Nparticles);
 	double * arrayX = (double *)malloc(sizeof(double)*Nparticles);
+	// Stream Notes (Yiwei): arrayX and arrayY is also indirectly accessed. Choose the better type
+    zsim_configure_stream_affine(arrayX, sizeof(double), 0, 0, sizeof(double)*Nparticles);
 	double * arrayY = (double *)malloc(sizeof(double)*Nparticles);
+    zsim_configure_stream_affine(arrayY, sizeof(double), 0, 0, sizeof(double)*Nparticles);
 	double * xj = (double *)malloc(sizeof(double)*Nparticles);
+    zsim_configure_stream_affine(xj, sizeof(double), 0, 0, sizeof(double)*Nparticles);
 	double * yj = (double *)malloc(sizeof(double)*Nparticles);
+    zsim_configure_stream_affine(yj, sizeof(double), 0, 0, sizeof(double)*Nparticles);
 	double * CDF = (double *)malloc(sizeof(double)*Nparticles);
+    zsim_configure_stream_affine(CDF, sizeof(double), 0, 0, sizeof(double)*Nparticles);
 	double * u = (double *)malloc(sizeof(double)*Nparticles);
+    zsim_configure_stream_affine(u, sizeof(double), 0, 0, sizeof(double)*Nparticles);
 	int * ind = (int*)malloc(sizeof(int)*countOnes*Nparticles);
+    zsim_configure_stream_affine(ind, sizeof(int), 0, 0, sizeof(int)*Nparticles);
 	#pragma omp parallel for shared(arrayX, arrayY, xe, ye) private(x)
 	for(x = 0; x < Nparticles; x++){
 		arrayX[x] = xe;
@@ -584,11 +597,13 @@ int main(int argc, char * argv[]){
 	}
 	//establish seed
 	int * seed = (int *)malloc(sizeof(int)*Nparticles);
+    zsim_configure_stream_affine(seed, sizeof(int), 0, 0, sizeof(int)*Nparticles);
 	int i;
 	for(i = 0; i < Nparticles; i++)
 		seed[i] = time(0)*i;
 	//malloc matrix
 	int * I = (int *)malloc(sizeof(int)*IszX*IszY*Nfr);
+    zsim_configure_stream_affine(I, sizeof(int), 0, 0, sizeof(int)*IszX*IszY*Nfr);
 	long long start = get_time();
 
 #ifdef ENABLE_RODINIA_HOOKS

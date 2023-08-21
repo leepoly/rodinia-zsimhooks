@@ -3,6 +3,10 @@
 #include <omp.h>
 #include <sys/time.h>
 
+#ifdef ENABLE_RODINIA_HOOKS
+#include <zsim_hooks.h>
+#endif
+
 // Returns the current system time in microseconds 
 long long get_time()
 {
@@ -30,10 +34,6 @@ using namespace std;
 #define FACTOR_CHIP	0.5
 #define OPEN
 //#define NUM_THREAD 4
-
-#ifdef ENABLE_RODINIA_HOOKS
-#include <zsim_hooks.h>
-#endif
 
 typedef float FLOAT;
 
@@ -294,8 +294,11 @@ int main(int argc, char **argv)
 
 	/* allocate memory for the temperature and power arrays	*/
 	temp = (FLOAT *) calloc (grid_rows * grid_cols, sizeof(FLOAT));
+    zsim_configure_stream_affine(temp, sizeof(FLOAT), 0, 0, sizeof(FLOAT) * grid_rows * grid_cols);
 	power = (FLOAT *) calloc (grid_rows * grid_cols, sizeof(FLOAT));
+    zsim_configure_stream_affine(power, sizeof(FLOAT), 0, 0, sizeof(FLOAT) * grid_rows * grid_cols);
 	result = (FLOAT *) calloc (grid_rows * grid_cols, sizeof(FLOAT));
+    zsim_configure_stream_affine(result, sizeof(FLOAT), 0, 0, sizeof(FLOAT) * grid_rows * grid_cols);
 	if(!temp || !power)
 		fatal("unable to allocate memory");
 

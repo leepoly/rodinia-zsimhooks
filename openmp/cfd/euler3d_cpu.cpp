@@ -383,6 +383,7 @@ int main(int argc, char** argv)
 	const char* data_file_name = argv[1];
 
         float ff_variable[NVAR];
+		zsim_configure_stream_affine(ff_variable, sizeof(float), 0, 0, sizeof(float)*NVAR);
         float3 ff_flux_contribution_momentum_x, ff_flux_contribution_momentum_y, ff_flux_contribution_momentum_z, ff_flux_contribution_density_energy;
 
 	// set far field conditions
@@ -427,8 +428,11 @@ int main(int argc, char** argv)
 		nelr = block_length*((nel / block_length )+ std::min(1, nel % block_length));
 
 		areas = new float[nelr];
+		zsim_configure_stream_affine(areas, sizeof(float), 0, 0, sizeof(float)*nelr);
 		elements_surrounding_elements = new int[nelr*NNB];
+		zsim_configure_stream_affine(elements_surrounding_elements, sizeof(int), 0, 0, sizeof(int)*nelr*NNB);
 		normals = new float[NDIM*NNB*nelr];
+		zsim_configure_stream_affine(normals, sizeof(float), 0, 0, sizeof(float)*NDIM*NNB*nelr);
 
 		// read in data
 		for(int i = 0; i < nel; i++)
@@ -464,11 +468,15 @@ int main(int argc, char** argv)
 
 	// Create arrays and set initial conditions
 	float* variables = alloc<float>(nelr*NVAR);
+    zsim_configure_stream_affine(variables, sizeof(float), 0, 0, sizeof(float)*nelr*NVAR);
 	initialize_variables(nelr, variables, ff_variable);
 
 	float* old_variables = alloc<float>(nelr*NVAR);
+    zsim_configure_stream_affine(old_variables, sizeof(float), 0, 0, sizeof(float)*nelr*NVAR);
 	float* fluxes = alloc<float>(nelr*NVAR);
+    zsim_configure_stream_affine(fluxes, sizeof(float), 0, 0, sizeof(float)*nelr*NVAR);
 	float* step_factors = alloc<float>(nelr);
+    zsim_configure_stream_affine(step_factors, sizeof(float), 0, 0, sizeof(float)*nelr);
 
 	// these need to be computed the first time in order to compute time step
 	std::cout << "Starting..." << std::endl;

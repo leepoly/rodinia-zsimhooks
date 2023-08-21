@@ -36,10 +36,13 @@ init(int argc, char** argv)
                 exit(0);
         }
 	data = new int[rows*cols];
+    zsim_configure_stream_affine(data, sizeof(int), 0, 0, sizeof(int) * rows*cols);
 	wall = new int*[rows];
+    zsim_configure_stream_affine(wall, sizeof(int*), 0, 0, sizeof(int*) * rows);
 	for(int n=0; n<rows; n++)
 		wall[n]=data+cols*n;
 	result = new int[cols];
+    zsim_configure_stream_affine(result, sizeof(int), 0, 0, sizeof(int) * cols);
 	
 	int seed = M_SEED;
 	srand(seed);
@@ -97,6 +100,7 @@ void run(int argc, char** argv)
 
     dst = result;
     src = new int[cols];
+    zsim_configure_stream_affine(src, sizeof(int), 0, 0, sizeof(int) * cols);
 
     pin_stats_reset();
 

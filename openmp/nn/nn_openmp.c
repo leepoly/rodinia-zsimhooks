@@ -34,6 +34,7 @@ int main(int argc, char* argv[]) {
     FILE   *flist,*fp;
 	int    i=0,j=0, k=0, rec_count=0, done=0;
 	char   sandbox[REC_LENGTH * REC_WINDOW], *rec_iter,*rec_iter2, dbname[64];
+    zsim_configure_stream_affine(sandbox, sizeof(char), 0, 0, sizeof(char)*REC_LENGTH * REC_WINDOW);
 	struct neighbor *neighbors = NULL;
 	float target_lat, target_long, tmp_lat=0, tmp_long=0;
 
@@ -53,6 +54,7 @@ int main(int argc, char* argv[]) {
 	target_long = atof(argv[4]);
 
 	neighbors = malloc(k*sizeof(struct neighbor));
+    zsim_configure_stream_affine(neighbors, sizeof(struct neighbor), 0, 0, sizeof(struct neighbor)*k);
 
 	if(neighbors == NULL) {
 		fprintf(stderr, "no room for neighbors\n");
@@ -77,6 +79,7 @@ int main(int argc, char* argv[]) {
 
 	float *z;
 	z  = (float *) malloc(REC_WINDOW * sizeof(float));
+    zsim_configure_stream_affine(z, sizeof(float), 0, 0, sizeof(float)*REC_WINDOW);
 
 #ifdef ENABLE_RODINIA_HOOKS
     zsim_roi_begin();

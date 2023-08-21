@@ -40,6 +40,10 @@
 
 #include "./kernel/kernel_cpu.h"				// (in library path specified here)
 
+#ifdef ENABLE_RODINIA_HOOKS
+#include <zsim_hooks.h>
+#endif
+
 //========================================================================================================================================================================================================200
 //	MAIN FUNCTION
 //========================================================================================================================================================================================================200
@@ -188,6 +192,7 @@ main(	int argc,
 
 	// allocate boxes
 	box_cpu = (box_str*)malloc(dim_cpu.box_mem);
+	zsim_configure_stream_affine(box_cpu, sizeof(box_str), 0, 0, dim_cpu.box_mem);
 
 	// initialize number of home boxes
 	nh = 0;
@@ -254,6 +259,7 @@ main(	int argc,
 
 	// input (distances)
 	rv_cpu = (FOUR_VECTOR*)malloc(dim_cpu.space_mem);
+	zsim_configure_stream_affine(rv_cpu, sizeof(FOUR_VECTOR), 0, 0, dim_cpu.space_mem);
 	for(i=0; i<dim_cpu.space_elem; i=i+1){
 		rv_cpu[i].v = (rand()%10 + 1) / 10.0;			// get a number in the range 0.1 - 1.0
 		rv_cpu[i].x = (rand()%10 + 1) / 10.0;			// get a number in the range 0.1 - 1.0
@@ -263,12 +269,14 @@ main(	int argc,
 
 	// input (charge)
 	qv_cpu = (fp*)malloc(dim_cpu.space_mem2);
+	zsim_configure_stream_affine(qv_cpu, sizeof(fp), 0, 0, dim_cpu.space_mem2);
 	for(i=0; i<dim_cpu.space_elem; i=i+1){
 		qv_cpu[i] = (rand()%10 + 1) / 10.0;			// get a number in the range 0.1 - 1.0
 	}
 
 	// output (forces)
 	fv_cpu = (FOUR_VECTOR*)malloc(dim_cpu.space_mem);
+	zsim_configure_stream_affine(fv_cpu, sizeof(FOUR_VECTOR), 0, 0, dim_cpu.space_mem);
 	for(i=0; i<dim_cpu.space_elem; i=i+1){
 		fv_cpu[i].v = 0;								// set to 0, because kernels keeps adding to initial value
 		fv_cpu[i].x = 0;								// set to 0, because kernels keeps adding to initial value

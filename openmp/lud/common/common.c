@@ -6,6 +6,10 @@
 
 #include "common.h"
 
+#ifdef ENABLE_RODINIA_HOOKS
+#include <zsim_hooks.h>
+#endif
+
 void stopwatch_start(stopwatch *sw){
     if (sw == NULL)
         return;
@@ -225,6 +229,7 @@ create_matrix(float **mp, int size){
     }
 
   m = (float*) malloc(sizeof(float)*size*size);
+  zsim_configure_stream_affine(m, sizeof(float), 0, 0, sizeof(float)*size*size);
   if ( m == NULL) {
       return RET_FAILURE;
   }

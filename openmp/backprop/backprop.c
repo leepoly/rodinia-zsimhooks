@@ -14,6 +14,10 @@
 #include <math.h>
 #define OPEN
 
+#ifdef ENABLE_RODINIA_HOOKS
+#include <zsim_hooks.h>
+#endif
+
 #define ABS(x)          (((x) > 0.0) ? (x) : (-(x)))
 
 #define fastcopy(to,from,len)\
@@ -59,6 +63,7 @@ int n;
   float *new;
 
   new = (float *) malloc ((unsigned) (n * sizeof (float)));
+  // zsim_configure_stream_affine(new, sizeof(float), 0, 0, n * sizeof (float)); // Stream note (Yiwei) use stride property to exploit affine patterns // too many streams
   if (new == NULL) {
     printf("ALLOC_1D_DBL: Couldn't allocate array of floats\n");
     return (NULL);
@@ -76,6 +81,7 @@ int m, n;
   float **new;
 
   new = (float **) malloc ((unsigned) (m * sizeof (float *)));
+  zsim_configure_stream_affine(new, sizeof(float*), 0, 0, m * sizeof (float*));
   if (new == NULL) {
     printf("ALLOC_2D_DBL: Couldn't allocate array of dbl ptrs\n");
     return (NULL);
