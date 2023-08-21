@@ -76,14 +76,14 @@ OPENCL:
 	cd opencl/hybridsort;              	make;   cp hybridsort $(CUDA_BIN_DIR)
 	cd opencl/dwt2d;                   	make;   cp dwt2d  $(CUDA_BIN_DIR)
 	
-clean: CUDA_clean OMP_clean OCL_clean
+clean: OMP_clean 
 
 CUDA_clean:
 	cd $(CUDA_BIN_DIR); rm -f *
 	for dir in $(CUDA_DIRS) ; do cd cuda/$$dir ; make clean ; cd ../.. ; done
 	
 OMP_clean:
-	cd $(OMP_BIN_DIR); rm -f *
+	rm -rf $(OMP_BIN_DIR)/*
 	for dir in $(OMP_DIRS) ; do cd openmp/$$dir ; make clean ; cd ../.. ; done
 
 OCL_clean:
