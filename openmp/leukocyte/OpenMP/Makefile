@@ -25,4 +25,4 @@ $(MATRIX_DIR)/meschach.a:
 	cd $(MATRIX_DIR); ./configure --with-all; make all; make clean
 
 clean:
-	rm detect_main.o leukocyte
+	rm find_ellipse.o detect_main.o leukocyte
