@@ -15,6 +15,10 @@ struct neighbor {
 	double dist;
 };
 
+#ifdef ENABLE_RODINIA_HOOKS
+#include <zsim_hooks.h>
+#endif
+
 /**
 * This program finds the k-nearest neighbors
 * Usage:	./nn <filelist> <num> <target latitude> <target longitude>
@@ -73,6 +77,10 @@ int main(int argc, char* argv[]) {
 
 	float *z;
 	z  = (float *) malloc(REC_WINDOW * sizeof(float));
+
+#ifdef ENABLE_RODINIA_HOOKS
+    zsim_roi_begin();
+#endif
 
 	while(!done) {
 		//Read in REC_WINDOW number of records
@@ -142,6 +150,10 @@ int main(int argc, char* argv[]) {
 			}
 		}
 	}//End while loop
+
+#ifdef ENABLE_RODINIA_HOOKS
+    zsim_roi_end();
+#endif
 
 	fprintf(stderr, "The %d nearest neighbors are:\n", k);
 	for( j = 0 ; j < k ; j++ ) {

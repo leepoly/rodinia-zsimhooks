@@ -14,6 +14,10 @@
 
 #include <omp.h>
 
+#ifdef ENABLE_RODINIA_HOOKS
+#include <zsim_hooks.h>
+#endif
+
 struct float3 { float x, y, z; };
 
 #ifndef block_length
@@ -474,6 +478,9 @@ int main(int argc, char** argv)
         #pragma omp target map(alloc: old_variables[0:(nelr*NVAR)]) map(to: nelr, areas[0:nelr], step_factors[0:nelr], elements_surrounding_elements[0:(nelr*NNB)], normals[0:(NDIM*NNB*nelr)], fluxes[0:(nelr*NVAR)], ff_variable[0:NVAR], ff_flux_contribution_momentum_x, ff_flux_contribution_momentum_y, ff_flux_contribution_momentum_z, ff_flux_contribution_density_energy) map(variables[0:(nelr*NVAR)])
     #endif
 #endif
+#ifdef ENABLE_RODINIA_HOOKS
+    zsim_roi_begin();
+#endif
 	// Begin iterations
 	for(int i = 0; i < iterations; i++)
 	{
@@ -488,7 +495,9 @@ int main(int argc, char** argv)
 			time_step(j, nelr, old_variables, variables, step_factors, fluxes);
 		}
 	}
-
+#ifdef ENABLE_RODINIA_HOOKS
+    zsim_roi_end();
+#endif
 #ifdef _OPENMP
 	double end = omp_get_wtime();
 	std::cout  << "Compute time: " << (end-start) << std::endl;

@@ -11,6 +11,10 @@
 
 #define BLOCK_SIZE 16
 
+#ifdef ENABLE_RODINIA_HOOKS
+#include <zsim_hooks.h>
+#endif
+
 ////////////////////////////////////////////////////////////////////////////////
 // declaration, forward
 void runTest( int argc, char** argv);
@@ -304,8 +308,16 @@ runTest( int argc, char** argv)
    
     long long start_time = get_time();
 
+#ifdef ENABLE_RODINIA_HOOKS
+    zsim_roi_begin();
+#endif
+
     nw_optimized( input_itemsets, output_itemsets, referrence,
         max_rows, max_cols, penalty );
+
+#ifdef ENABLE_RODINIA_HOOKS
+    zsim_roi_end();
+#endif
 
     long long end_time = get_time();
 

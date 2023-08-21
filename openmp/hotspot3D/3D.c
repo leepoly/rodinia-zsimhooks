@@ -6,6 +6,10 @@
 #include <sys/time.h>
 #include <string.h>
 
+#ifdef ENABLE_RODINIA_HOOKS
+#include <zsim_hooks.h>
+#endif
+
 #define STR_SIZE (256)
 #define MAX_PD	(3.0e6)
 /* required precision in degrees	*/
@@ -255,10 +259,19 @@ int main(int argc, char** argv)
     struct timeval start, stop;
     float time;
     gettimeofday(&start,NULL);
+
+#ifdef ENABLE_RODINIA_HOOKS
+    zsim_roi_begin();
+#endif
+
     computeTempOMP(powerIn, tempIn, tempOut, numCols, numRows, layers, Cap, Rx, Ry, Rz, dt,iterations);
     gettimeofday(&stop,NULL);
     time = (stop.tv_usec-start.tv_usec)*1.0e-6 + stop.tv_sec - start.tv_sec;
     computeTempCPU(powerIn, tempCopy, answer, numCols, numRows, layers, Cap, Rx, Ry, Rz, dt,iterations);
+
+#ifdef ENABLE_RODINIA_HOOKS
+    zsim_roi_end();
+#endif
 
     float acc = accuracy(tempOut,answer,numRows*numCols*layers);
     printf("Time: %.3f (s)\n",time);

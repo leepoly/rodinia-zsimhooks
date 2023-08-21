@@ -9,6 +9,11 @@
 #include <sys/time.h>
 #include <omp.h>
 #include <limits.h>
+
+#ifdef ENABLE_RODINIA_HOOKS
+#include <zsim_hooks.h>
+#endif
+
 #define PI 3.1415926535897932
 /**
 @var M value for Linear Congruential Generator (LCG); use GCC's value
@@ -585,12 +590,22 @@ int main(int argc, char * argv[]){
 	//malloc matrix
 	int * I = (int *)malloc(sizeof(int)*IszX*IszY*Nfr);
 	long long start = get_time();
+
+#ifdef ENABLE_RODINIA_HOOKS
+    zsim_roi_begin();
+#endif
+
 	//call video sequence
 	videoSequence(I, IszX, IszY, Nfr, seed);
 	long long endVideoSequence = get_time();
 	printf("VIDEO SEQUENCE TOOK %f\n", elapsed_time(start, endVideoSequence));
 	//call particle filter
 	particleFilter(I, IszX, IszY, Nfr, seed, Nparticles);
+
+#ifdef ENABLE_RODINIA_HOOKS
+    zsim_roi_end();
+#endif
+
 	long long endParticleFilter = get_time();
 	printf("PARTICLE FILTER TOOK %f\n", elapsed_time(endVideoSequence, endParticleFilter));
 	printf("ENTIRE PROGRAM TOOK %f\n", elapsed_time(start, endParticleFilter));
