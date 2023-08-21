@@ -34,6 +34,8 @@ int main(int argc, char ** argv) {
 		AVI_print_error("Error with AVI_open_input_file");
 		return -1;
 	}
+    // zsim_configure_stream_affine(cell_file, sizeof(avi_t), 0, 0, sizeof(avi_t)); // too large element size
+    zsim_configure_stream_affine(cell_file->video_index, sizeof(video_index_entry), 0, 0, cell_file->video_frames * sizeof(video_index_entry));
 	
 	int i, j, *crow, *ccol, pair_counter = 0, x_result_len = 0, Iter = 20, ns = 4, k_count = 0, n;
 	MAT *cellx, *celly, *A;
@@ -124,7 +126,9 @@ int main(int argc, char ** argv) {
 	
 	V = (double *) malloc(sizeof(double) * pair_counter);
 	QAX_CENTERS = (double * )malloc(sizeof(double) * pair_counter);
+    zsim_configure_stream_affine(QAX_CENTERS, sizeof(double), 0, 0, sizeof(double) * pair_counter);
 	QAY_CENTERS = (double *) malloc(sizeof(double) * pair_counter);
+    zsim_configure_stream_affine(QAY_CENTERS, sizeof(double), 0, 0, sizeof(double) * pair_counter);
 	memset(V, 0, sizeof(double) * pair_counter);
 	memset(QAX_CENTERS, 0, sizeof(double) * pair_counter);
 	memset(QAY_CENTERS, 0, sizeof(double) * pair_counter);
@@ -262,6 +266,7 @@ int main(int argc, char ** argv) {
   zsim_roi_begin();
 #endif
 
+	printf("before ellipsetrack\n");
 	ellipsetrack(cell_file, QAX_CENTERS, QAY_CENTERS, k_count, radius, num_snaxels, num_frames);
 
 #ifdef ENABLE_RODINIA_HOOKS

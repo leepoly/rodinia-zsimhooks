@@ -1,5 +1,7 @@
 #include "track_ellipse.h"
 
+#include <zsim_hooks.h>
+
 
 void ellipsetrack(avi_t *video, double *xc0, double *yc0, int Nc, int R, int Np, int Nf) {
 	/*
@@ -19,11 +21,10 @@ void ellipsetrack(avi_t *video, double *xc0, double *yc0, int Nc, int R, int Np,
 	%                                                        NILANJAN RAY)
 	% Ported to C by: MICHAEL BOYER
 	*/
-	
 	int i, j;
-	
 	// Compute angle parameter
 	double *t = (double *) malloc(sizeof(double) * Np);
+    zsim_configure_stream_affine(t, sizeof(double), 0, 0, sizeof(double) * Np);
 	double increment = (2.0 * PI) / (double) Np;
 	for (i = 0; i < Np; i++) {
 		t[i] =  increment * (double) i ;
@@ -62,7 +63,7 @@ void ellipsetrack(avi_t *video, double *xc0, double *yc0, int Nc, int R, int Np,
 	// Process each frame
 	int frame_num, cell_num;
 	for (frame_num = 1; frame_num <= Nf; frame_num++) {	 
-		printf("\rProcessing frame %d / %d", frame_num, Nf);
+		printf("\rProcessing frame 111 %d / %d", frame_num, Nf);
 		fflush(stdout);
 		
 		// Get the current video frame and its dimensions
@@ -599,6 +600,8 @@ double **alloc_2d_double(int x, int y) {
 	// Allocate the data and the pointers to the data
 	double *data = (double *) calloc(x * y, sizeof(double));
 	double **pointers = (double **) malloc(sizeof(double *) * x);
+    zsim_configure_stream_affine(data, sizeof(double), 0, 0, x * y * sizeof(double));
+    zsim_configure_stream_affine(pointers, sizeof(double*), 0, 0, x * sizeof(double*));
 	
 	// Make the pointers point to the data
 	int i;
@@ -616,8 +619,11 @@ double ***alloc_3d_double(int x, int y, int z) {
 	
 	// Allocate the data and the two levels of pointers
 	double *data = (double *) calloc(x * y * z, sizeof(double));
+    zsim_configure_stream_affine(data, sizeof(double), 0, 0, x * y * z * sizeof(double));
 	double **pointers_to_data = (double **) malloc(sizeof(double *) * x * y);
+    zsim_configure_stream_affine(pointers_to_data, sizeof(double*), 0, 0, x * y * sizeof(double*));
 	double ***pointers_to_pointers = (double ***) malloc(sizeof(double **) * x);
+    zsim_configure_stream_affine(pointers_to_pointers, sizeof(double**), 0, 0, x * sizeof(double**));
 	
 	// Make the pointers point to the data
 	int i;
