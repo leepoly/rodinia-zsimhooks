@@ -28,6 +28,10 @@
 #include <hooks.h>
 #endif
 
+#ifdef ENABLE_RODINIA_HOOKS
+#include <zsim_hooks.h>
+#endif
+
 using namespace std;
 
 #define MAXNAMESIZE 1024 // max filename length
@@ -1266,7 +1270,13 @@ int main(int argc, char **argv)
 #ifdef ENABLE_PARSEC_HOOKS
   __parsec_roi_begin();
 #endif
+#ifdef ENABLE_RODINIA_HOOKS
+    zsim_roi_begin();
+#endif
   streamCluster(stream, kmin, kmax, dim, chunksize, clustersize, outfilename );
+#ifdef ENABLE_RODINIA_HOOKS
+    zsim_roi_end();
+#endif
 #ifdef ENABLE_PARSEC_HOOKS
   __parsec_roi_end();
 #endif

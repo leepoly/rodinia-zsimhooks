@@ -1,6 +1,6 @@
 # C compiler
 CC = gcc
-CC_FLAGS = -g -fopenmp -O2 -I../../common
+CC_FLAGS = -g -fopenmp -O2 -I../../common -DENABLE_RODINIA_HOOKS 
 
 
 backprop: backprop.o facetrain.o imagenet.o backprop_kernel.o 

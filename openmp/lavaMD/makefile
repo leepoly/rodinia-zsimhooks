@@ -38,7 +38,9 @@ main.o:		main.h \
 	$(C_C)	${OUTPUT} main.c \
 			-c \
 			-o main.o \
-			-O3
+			-O3 \
+			-I../../common \
+			-DENABLE_RODINIA_HOOKS
 
 ./kernel/kernel_cpu.o:	./kernel/kernel_cpu.h \
 						./kernel/kernel_cpu.c
